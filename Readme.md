@@ -10,10 +10,12 @@ It should work on any platform supporting dotnet (e.g. Windows, macOS, and Linux
 First, determine the API search query to use. https://open5e.com/api-docs has more information on this. For example the following returns all level 2 spells for the Cleric class:
 https://api.open5e.com/spells/?dnd_class__icontains=Cleric&level_int__iexact=2
 
+Next determine the card size you wish to use. The current rpg-cards supports 3.5"x5.0", "7.5"x5.0", 2.5"x3.5", and 2.25"x3.5". These are conviently named as "S35x50, S75x50, S25x35, and S225x35" for the arguments.
+
 From the command line run it as follows:      
 > dotnet API2Card.dll S35x50 "https://api.open5e.com/spells/?dnd_class__icontains=Cleric&level_int__iexact=2" "Cleric_lvl2.json"
 
-From here, navigate to https://crobi.github.io/rpg-cards/generator/generate.html (or your own copy) and click "Load from file". 
+From here, navigate to https://crobi.github.io/rpg-cards/generator/generate.html (or your own copy) and click "Load from file". Select the file generated.
 
 
 ## Known Issues
