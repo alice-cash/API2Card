@@ -1,15 +1,17 @@
 ## API2Card
 API2Card is intended to take an open5e API url and produce data that can be used by rpg-cards utility.
 
-Currently this only supports spells metadata.
+Currently this only supports the spells adata. 
+
+It should work on any platform supporting dotnet (e.g. Windows, macOS, and Linux)
 
 ## How to use
 
 First, determine the API search query to use. https://open5e.com/api-docs has more information on this. For example the following returns all level 2 spells for the Cleric class:
 https://api.open5e.com/spells/?dnd_class__icontains=Cleric&level_int__iexact=2
 
-From the command line run it as follows:
-#dotnet.exe API2Card.dll "https://api.open5e.com/spells/?dnd_class__icontains=Cleric&level_int__iexact=2" "Cleric_lvl2.json"
+From the command line run it as follows:      
+> dotnet API2Card.dll S35x50 "https://api.open5e.com/spells/?dnd_class__icontains=Cleric&level_int__iexact=2" "Cleric_lvl2.json"
 
 From here, navigate to https://crobi.github.io/rpg-cards/generator/generate.html (or your own copy) and click "Load from file". 
 
