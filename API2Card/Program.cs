@@ -49,6 +49,24 @@ namespace API2Card
             {
                 Console.WriteLine(keys.ToString());
             }
+
+            Console.WriteLine("Current Monster args supported: ");
+            foreach (Search.SearchKeysMonster keys in (Search.SearchKeysMonster[])Enum.GetValues(typeof(Search.SearchKeysMonster)))
+            {
+                Console.WriteLine(keys.ToString());
+            }
+
+            Console.WriteLine("Current Weapon args supported: ");
+            foreach (Search.SearchKeysWeapon keys in (Search.SearchKeysWeapon[])Enum.GetValues(typeof(Search.SearchKeysWeapon)))
+            {
+                Console.WriteLine(keys.ToString());
+            }
+
+            Console.WriteLine("Current Magic_Item args supported: ");
+            foreach (Search.SearchKeysMagic_Item keys in (Search.SearchKeysMagic_Item[])Enum.GetValues(typeof(Search.SearchKeysMagic_Item)))
+            {
+                Console.WriteLine(keys.ToString());
+            }
         }
 
         public static string RunQuery(Search searchOptions)
