@@ -1,9 +1,9 @@
 ﻿namespace API2Card.JSON.Spells
 {
-    public class Spell
+    public class Spell : Result
     {
         public string slug;
-        public string name;
+      //  public string name;
         public string desc;
         public string higher_level;
         public string page;

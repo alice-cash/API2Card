@@ -1,4 +1,8 @@
+using API2Card.JSON;
+using API2Card.JSON.Magic_Item;
+using API2Card.JSON.Monster;
 using API2Card.JSON.Spells;
+using API2Card.JSON.Weapon;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,59 +15,126 @@ namespace API2Card
     {
         static void Main(string[] args)
         {
-
-            //LoadJson("S25x35","https://api.open5e.com/spells/?level_int__iexact=", "./test.json");
-            if (args.Length != 3) {
+            //args = new string[] { "S35x50", "Magic_Item" };
+            Search searchParamaters = Search.ParseArgs(args);
+            if(searchParamaters.Sucess == false)
+            {
                 PrintHelp();
                 return;
             }
-            LoadJson(args[0], args[1], args[2]);
+
+            //File.WriteAllText("./a.json", RunQuery(searchParamaters));
+            Console.WriteLine(RunQuery(searchParamaters));
         }
+
+        
 
         private static void PrintHelp()
         {
-            Console.WriteLine("Requires 3 arguments, the card size, the API url to parse, and an output file name. Wrap these in double quotes to prevent commabd line issues.");
+            Console.WriteLine("Requires the following arguments, the card size, search type, and any search filters.");
             Console.WriteLine("Current card sizes supported: ");
             foreach (CardSize suit in (CardSize[])Enum.GetValues(typeof(CardSize)))
             {
                 Console.WriteLine(suit.ToString());
             }
-        }
 
-        public static void LoadJson(string cardSizeArg, string uri, string file)
-        {
-            CardSize cardSize;
-            if(!Enum.TryParse<CardSize>(cardSizeArg, out cardSize))
+            Console.WriteLine("Current search types supported: ");
+            foreach (Search.SearchKeys keys in (Search.SearchKeys[])Enum.GetValues(typeof(Search.SearchKeys)))
             {
-                Console.WriteLine("Unknown card size {0}", cardSizeArg);
-                PrintHelp();
-                return;
+                Console.WriteLine(keys.ToString());
             }
 
+            Console.WriteLine("Current Spell args supported: ");
+            foreach (Search.SearchKeysSpell keys in (Search.SearchKeysSpell[])Enum.GetValues(typeof(Search.SearchKeysSpell)))
+            {
+                Console.WriteLine(keys.ToString());
+            }
+        }
+
+        public static string RunQuery(Search searchOptions)
+        {
+
             bool Next = true;
-            List<SpellCard> CardList = new List<SpellCard>();
+            List<CardJSON> CardList = new List<CardJSON>();
+            CardSizeData csd = new CardSizeData
+            {
+                Size = searchOptions.CardSize
+            };
+            string uri = searchOptions.GenerateSearchQuery();
             using (WebClient wc = new WebClient())
             {
                 while (Next)
                 {
                     string json = wc.DownloadString(uri);
-                    Result SearchResults = JsonConvert.DeserializeObject<Result>(json);
-
-                    foreach (Spell s in SearchResults.results)
+                    if (searchOptions.Type == Search.SearchKeys.Spell)
                     {
-                        CardSizeData csd = new CardSizeData();
-                        csd.Size = cardSize;
-                        SpellCard[] Cards = SpellCard.GenerateSpellCard(s, CardType.Spell, csd);
-                        CardList.AddRange(Cards);
+                        Result<Spell> SearchResults = JsonConvert.DeserializeObject<Result<Spell>>(json);
+
+                        foreach (Spell s in SearchResults.results)
+                        {
+                            CardJSON[] Cards = SpellCard.GenerateCard(s, CardType.Spell, csd);
+                            CardList.AddRange(Cards);
+                        }
+
+                        if (SearchResults.next != null)
+                            uri = SearchResults.next;
+                        else
+                            Next = false;
+
                     }
 
-                    if (SearchResults.next != null)
-                        uri = SearchResults.next;
-                    else
-                        Next = false;
+                    if (searchOptions.Type == Search.SearchKeys.Monster)
+                    {
+                        Result<Monster> SearchResults = JsonConvert.DeserializeObject<Result<Monster>>(json);
+
+                        foreach (Monster s in SearchResults.results)
+                        {
+                            CardJSON[] Cards = MonsterCard.GenerateCard(s, CardType.Monster, csd);
+                            CardList.AddRange(Cards);
+                        }
+
+                        if (SearchResults.next != null)
+                            uri = SearchResults.next;
+                        else
+                            Next = false;
+                    }
+
+                    if (searchOptions.Type == Search.SearchKeys.Magic_Item)
+                    {
+                        Result<Magic_Item> SearchResults = JsonConvert.DeserializeObject<Result<Magic_Item>>(json);
+
+                        foreach (Magic_Item s in SearchResults.results)
+                        {
+                            CardJSON[] Cards = Magic_ItemCard.GenerateCard(s, CardType.Magic_Item, csd);
+                            CardList.AddRange(Cards);
+                        }
+
+                        if (SearchResults.next != null)
+                            uri = SearchResults.next;
+                        else
+                            Next = false;
+                    }
+
+
+                    if (searchOptions.Type == Search.SearchKeys.Weapon)
+                    {
+                        Result<Weapon> SearchResults = JsonConvert.DeserializeObject<Result<Weapon>>(json);
+
+                        foreach (Weapon s in SearchResults.results)
+                        {
+                            CardJSON[] Cards = WeaponCard.GenerateCard(s, CardType.Weapon, csd);
+                            CardList.AddRange(Cards);
+                        }
+
+                        if (SearchResults.next != null)
+                            uri = SearchResults.next;
+                        else
+                            Next = false;
+                    }
+
                 }
             }
-            File.WriteAllText(file, JsonConvert.SerializeObject(CardList.ToArray()));
+            return JsonConvert.SerializeObject(CardList.ToArray());
         }
     }
 }

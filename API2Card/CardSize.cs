@@ -28,7 +28,7 @@ namespace API2Card
                     case CardSize.S225x35: return 20;
                     case CardSize.S25x35: return 20;
                     case CardSize.S35x50: return 26;
-                    case CardSize.S75x50: return 34;
+                    case CardSize.S75x50: return 32;
                     default: return 1;
                 }
             }

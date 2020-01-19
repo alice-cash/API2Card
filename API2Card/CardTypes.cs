@@ -6,7 +6,10 @@ namespace API2Card
 {
     public enum CardType
     {
-        Spell
+        Spell,
+        Monster,
+        Weapon,
+        Magic_Item
     }
 
     public static class CardType_Helper
