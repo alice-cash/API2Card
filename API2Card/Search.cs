@@ -283,7 +283,6 @@ namespace API2Card
 
         private static Search ParseArgsMagic_Item(string[] args, CardSize cardSize)
         {
-
             List<KeyValuePair<SearchKeysMagic_Item, string>> monsterSearch = new List<KeyValuePair<SearchKeysMagic_Item, string>>();
 
             for (int i = 0; i < args.Length - 1; i += 2)

@@ -2,5 +2,11 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/API2Card/obj
-/.vs
+API2Card/obj
+API2Card/bin
+bin
+obj
+.vs
+
+.fake
+.ionide
